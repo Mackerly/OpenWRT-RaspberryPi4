@@ -1,2 +1,2 @@
-# OpenWRT-RasperrbyPi4
-OpenWRT for RasperrbyPi4 use github action
+# OpenWRT-RaspberryPi4
+Builde OpenWRT for RaspberryPi4 use github action
