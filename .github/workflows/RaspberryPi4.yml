@@ -3,7 +3,7 @@ name: Build OpenWRT for RaspberryPi4
 on: push
 
 env:
-  SSH_ACTIONS: false
+  SSH_ACTIONS: true
   TZ: Asia/Shanghai
   
 jobs:
@@ -50,7 +50,13 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: OpenWrt
-        path: openwrt/bin 
+        path: openwrt/bin
+    
+    - name: 上传dl文件夹果到Actions页面
+      uses: actions/upload-artifact@master
+      with:
+        name: dl
+        path: openwrt/dl 
 
         
         
