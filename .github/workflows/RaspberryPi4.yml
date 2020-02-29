@@ -1,10 +1,11 @@
 name: Build OpenWRT for RaspberryPi4
 
-on: push
+#on: push
 
 env:
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   TZ: Asia/Shanghai
+  upxVersion: 3.96
   
 jobs:
   build:
@@ -27,7 +28,6 @@ jobs:
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-
 
     - name: 添加luci-app-passwal、luci-app-ssr-plu、luci-app-adbyby-plus
       run: |
@@ -55,6 +55,12 @@ jobs:
        cd openwrt/package
        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-vlmcsd
        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/vlmcsd
+       
+    - name: 更新 upx 程序版本,版本太低，压缩的 v2ray 可能会出错
+      run: |
+        wget -O /tmp/upx-$(env.upxVersion)-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v$(env.upxVersion)/upx-$(env.upxVersion)-amd64_linux.tar.xz
+        cd /tmp && tar xJf upx-$(env.upxVersion)-amd64_linux.tar.xz 
+        sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-$(env.upxVersion)/upx /usr/bin/upx
 
     - name: 生成默认的.config文件
       run: |
