@@ -18,14 +18,42 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib
-        
-    - name: Clone source code 
+        sudo apt-get -qq autoremove --purge
+        sudo apt-get -qq clean
+
+    - name: 克隆源码 
       run: |
         git clone https://git.openwrt.org/openwrt/openwrt.git
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        
+
+
+    - name: 添加luci-app-passwal、luci-app-ssr-plu、luci-app-adbyby-plus
+      run: |
+        cd openwrt/package
+        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-app-passwall
+        svn co https://github.com/Lienol/openwrt-package/trunk/package/tcping
+        svn co https://github.com/Lienol/openwrt-package/trunk/package/dns2socks
+        svn co https://github.com/Lienol/openwrt-package/trunk/package/chinadns-ng
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ipt2socks
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/shadowsocksr-libev
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/v2ray
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/trojan
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ipt2socks
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/pdnsd-alt
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/v2ray-plugin
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/simple-obfs
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-plus
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ssr-plus
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby    
+
+    - name: 添加luci-app-vlmcsd、vlmcsd
+      run: |
+       cd openwrt/package
+       svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-vlmcsd
+       svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/vlmcsd
+
     - name: 生成默认的.config文件
       run: |
        cd openwrt && make defconfig
@@ -41,22 +69,31 @@ jobs:
         find dl -size -1024c -exec rm -f {} \;
         
     - name: 开始编译Openwrt
+      id: compile
       run: |
         cd openwrt
-        make -j1
+        echo -e "$(nproc) thread compile"    
+        make -j$(nproc) || make -j1 V=s
         echo "::set-output name=status::success"
         
     - name: 上传编译的结果到Actions页面
       uses: actions/upload-artifact@master
+      if: steps.compile.outputs.status == 'success'
       with:
         name: OpenWrt
         path: openwrt/bin
     
-    - name: 上传dl文件夹果到Actions页面
+    - name: 上传dl文件夹到Actions页面
       uses: actions/upload-artifact@master
       with:
         name: dl
-        path: openwrt/dl 
+        path: openwrt/dl
+        
+    - name: 上传.config文件到Acions页面
+      uses: actions/upload-artifact@master
+      with:
+        name: .config
+        path: openwrt/.config
 
         
         
