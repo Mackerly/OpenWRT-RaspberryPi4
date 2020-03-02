@@ -101,7 +101,7 @@ jobs:
       run: |
         wget -O /tmp/upx-3.96-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz
         cd /tmp && tar xJf upx-3.96-amd64_linux.tar.xz 
-        sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-3.96/upx /usr/bin/upx
+        sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-3.96-amd64_linux/upx /usr/bin/upx
 
     - name: 生成默认的.config文件
       run: |
@@ -109,19 +109,19 @@ jobs:
        cd openwrt && rm -f ./.config* && touch ./.config
        
        # 编译 树莓派4 固件:
-       # cat >> .config <<EOF
+       cat >> .config <<EOF
        CONFIG_TARGET_bcm27xx=y
        CONFIG_TARGET_bcm27xx_bcm2711=y
        CONFIG_TARGET_bcm27xx_bcm2711_DEVICE_rpi-4=y
        
        # 默认root分区是104MB，这里改到500MB，避免软件太多，生成镜像失败
        CONFIG_TARGET_ROOTFS_PARTSIZE=500
-       # EOF
+       EOF
        
        # 编译后生成对应版本的 sdk imagebuilder:
-       # cat >> .config <<EOF
+       cat >> .config <<EOF
        CONFIG_SDK=y
-       # EOF
+       EOF
        make defconfig
         
     - name: SSH 链接到 Actions
