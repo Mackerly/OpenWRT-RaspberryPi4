@@ -99,9 +99,9 @@ jobs:
       
     - name: 更新 upx 程序版本,版本太低，压缩的 v2ray 可能会出错
       run: |
-        wget -O /tmp/upx-$(env.upxVersion)-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v$(env.upxVersion)/upx-$(env.upxVersion)-amd64_linux.tar.xz
-        cd /tmp && tar xJf upx-$(env.upxVersion)-amd64_linux.tar.xz 
-        sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-$(env.upxVersion)/upx /usr/bin/upx
+        wget -O /tmp/upx-3.96-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz
+        cd /tmp && tar xJf upx-3.96-amd64_linux.tar.xz 
+        sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-3.96/upx /usr/bin/upx
 
     - name: 生成默认的.config文件
       run: |
