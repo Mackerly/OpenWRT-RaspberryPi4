@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-#on: push
+on: push
 
 env:
   SSH_ACTIONS: false
@@ -48,14 +48,55 @@ jobs:
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-adbyby-plus
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-ssr-plus
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
-        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby    
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/dnsforwarder
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/kcptun    
 
     - name: 添加luci-app-vlmcsd、vlmcsd
       run: |
        cd openwrt/package
        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-vlmcsd
        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/vlmcsd
-       
+ 
+    - name: 添加其他的软件包源码
+      run: |
+        cd openwrt/package
+        # 网易云音乐解锁
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/UnblockNeteaseMusic
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-unblockmusic
+
+        # 百度网盘相关
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/baidupcs-web
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-baidupcs-web
+
+        # 动态dns相关
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_aliyun
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
+
+        # 内网穿透相关
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/frpc
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-nps
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/npc
+
+        # Docker相关
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-dockerman
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-lib-docker
+
+        # vsftp文件传输
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-vsftpd
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/vsftpd-alt
+
+        # 其他软件
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-guest-wifi
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
+
+        # luci主题
+        git clone https://github.com/jerrykuku/luci-theme-argon.git
+        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-argon-dark-mod
+        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-argon-light-mod
+        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-netgear-mc
+      
     - name: 更新 upx 程序版本,版本太低，压缩的 v2ray 可能会出错
       run: |
         wget -O /tmp/upx-$(env.upxVersion)-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v$(env.upxVersion)/upx-$(env.upxVersion)-amd64_linux.tar.xz
@@ -64,7 +105,24 @@ jobs:
 
     - name: 生成默认的.config文件
       run: |
-       cd openwrt && make defconfig
+       # cd openwrt && make defconfig
+       cd openwrt && rm -f ./.config* && touch ./.config
+       
+       # 编译 树莓派4 固件:
+       # cat >> .config <<EOF
+       CONFIG_TARGET_bcm27xx=y
+       CONFIG_TARGET_bcm27xx_bcm2711=y
+       CONFIG_TARGET_bcm27xx_bcm2711_DEVICE_rpi-4=y
+       
+       # 默认root分区是104MB，这里改到500MB，避免软件太多，生成镜像失败
+       CONFIG_TARGET_ROOTFS_PARTSIZE=500
+       # EOF
+       
+       # 编译后生成对应版本的 sdk imagebuilder:
+       # cat >> .config <<EOF
+       CONFIG_SDK=y
+       # EOF
+       make defconfig
         
     - name: SSH 链接到 Actions
       uses: P3TERX/debugger-action@master
