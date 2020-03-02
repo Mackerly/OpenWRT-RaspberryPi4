@@ -3,7 +3,7 @@ name: Build OpenWRT for RaspberryPi4
 on: push
 
 env:
-  SSH_ACTIONS: false
+  SSH_ACTIONS: true
   TZ: Asia/Shanghai
   upxVersion: 3.96
   
@@ -141,20 +141,48 @@ jobs:
         echo -e "$(nproc) thread compile"    
         make -j$(nproc) || make -j1 V=s
         echo "::set-output name=status::success"
-        
-    - name: 上传编译的结果到Actions页面
+
+    - name: 整理编译结果
+      run: |
+        cd openwrt && mkdir imagebuilder
+        find bin/targets -name *imagebuilder* -exec cp {} ./imagebuilder \;
+        mkdir sdk
+        find bin/targets -name *sdk* -exec cp {} ./sdk \;
+        mkdir images
+        find bin/targets -name *factory* -exec cp {} ./images \;
+        find bin/targets -name *sysupgrade* -exec cp {} ./sysupgrade \;
+
+    - name: 上传编译的结果到 Actions 页面
       uses: actions/upload-artifact@master
       if: steps.compile.outputs.status == 'success'
       with:
         name: OpenWrt
         path: openwrt/bin
     
-    - name: 上传dl文件夹到Actions页面
+    - name: 上传 dl 文件夹到 Actions 页面
       uses: actions/upload-artifact@master
       with:
         name: dl
         path: openwrt/dl
-        
+
+    - name: 上传 imagebuilder 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+        name: imagebuilder
+        path: openwrt/imagebuilder
+
+    - name: 上传 sdk 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+        name: sdk
+        path: openwrt/sdk
+
+    - name: 上传 刷机固件 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+        name: images
+        path: openwrt/images
+
     - name: 上传.config文件到Acions页面
       uses: actions/upload-artifact@master
       with:
