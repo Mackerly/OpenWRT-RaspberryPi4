@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-on: push
+#on: push
 
 env:
   SSH_ACTIONS: true
@@ -105,6 +105,8 @@ jobs:
         wget -O /tmp/upx-3.96-amd64_linux.tar.xz https://github.com/upx/upx/releases/download/v3.96/upx-3.96-amd64_linux.tar.xz
         cd /tmp && tar xJf upx-3.96-amd64_linux.tar.xz 
         sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-3.96-amd64_linux/upx /usr/bin/upx
+        cd - && cp /tmp/upx-3.96-amd64_linux/upx ./openwrt/staging_dir/host/bin/upx
+        rm -rf /tmp/upx-3.96-amd64_linux*
 
     - name: 生成默认的.config文件
       run: |
