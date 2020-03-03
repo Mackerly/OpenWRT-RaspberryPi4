@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-#on: push
+on: push
 
 env:
   SSH_ACTIONS: true
