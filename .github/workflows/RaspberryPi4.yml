@@ -90,6 +90,9 @@ jobs:
         # 其他软件
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-guest-wifi
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-usb-printer
+        git clone  https://github.com/TheMMcOfficial/lede-cups.git
+        mkdir yaaw
+        wget --no-check-certificate -O ./yaaw/Makefile https://raw.githubusercontent.com/openwrt/packages/lede-17.01/net/yaaw/Makefile
 
         # luci主题
         git clone https://github.com/jerrykuku/luci-theme-argon.git
@@ -106,23 +109,24 @@ jobs:
     - name: 生成默认的.config文件
       run: |
        # cd openwrt && make defconfig
-       cd openwrt && rm -f ./.config* && touch ./.config
+       cd openwrt && rm -f ./.config* && wget --no-check-certificate -O ./.config https://raw.githubusercontent.com/Mackerly/OpenWRT-RaspberryPi4/master/myconfig
+       make defconfig
        
        # 编译 树莓派4 固件:
-       cat >> .config <<EOF
-       CONFIG_TARGET_bcm27xx=y
-       CONFIG_TARGET_bcm27xx_bcm2711=y
-       CONFIG_TARGET_bcm27xx_bcm2711_DEVICE_rpi-4=y
+       # cat >> .config <<EOF
+       # CONFIG_TARGET_bcm27xx=y
+       # CONFIG_TARGET_bcm27xx_bcm2711=y
+       # CONFIG_TARGET_bcm27xx_bcm2711_DEVICE_rpi-4=y
        
        # 默认root分区是104MB，这里改到500MB，避免软件太多，生成镜像失败
-       CONFIG_TARGET_ROOTFS_PARTSIZE=500
-       EOF
+       # CONFIG_TARGET_ROOTFS_PARTSIZE=500
+       # EOF
        
        # 编译后生成对应版本的 sdk imagebuilder:
-       cat >> .config <<EOF
-       CONFIG_SDK=y
-       EOF
-       make defconfig
+       # cat >> .config <<EOF
+       # CONFIG_SDK=y
+       # EOF
+       # make defconfig
         
     - name: SSH 链接到 Actions
       uses: Mackerly/debugger-action@master
