@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-on: push
+#on: push
 
 env:
   SSH_ACTIONS: true
@@ -93,6 +93,11 @@ jobs:
         git clone  https://github.com/TheMMcOfficial/lede-cups.git
         mkdir yaaw
         wget --no-check-certificate -O ./yaaw/Makefile https://raw.githubusercontent.com/openwrt/packages/lede-17.01/net/yaaw/Makefile
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
+        git clone  https://github.com/frainzy1477/luci-app-clash.git
+        git clone  https://github.com/Dreamacro/clash       
 
         # luci主题
         git clone https://github.com/jerrykuku/luci-theme-argon.git
