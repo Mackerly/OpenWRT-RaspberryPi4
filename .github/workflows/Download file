@@ -1,0 +1,30 @@
+name: Download by Github Actions
+
+on: push
+
+
+jobs:
+  Download file:
+
+    runs-on: ubuntu-18.04
+    if: github.event.repository.owner.id == github.event.sender.id 
+      
+
+    steps:
+    - name: 安装软件
+      run: |
+        sudo apt-get update
+        sudo apt-get install wget curl
+        sudo apt-get -qq autoremove --purge
+        sudo apt-get -qq clean
+
+    - name: 安装软件
+      run: |
+        mkdir download
+		wget --no-check-certificate https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-280.0.0-windows-x86_64-bundled-python.zip
+
+	- name: 上传 刷机固件 到 Actions 页面
+		uses: actions/upload-artifact@master
+		with:
+		  name: download
+          path: download
