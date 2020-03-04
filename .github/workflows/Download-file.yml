@@ -21,10 +21,10 @@ jobs:
     - name: 安装软件
       run: |
         mkdir download
-		wget --no-check-certificate https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-280.0.0-windows-x86_64-bundled-python.zip
+	wget --no-check-certificate https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-280.0.0-windows-x86_64-bundled-python.zip
 
-	- name: 上传 刷机固件 到 Actions 页面
-		uses: actions/upload-artifact@master
-		with:
-		  name: download
-          path: download
+    - name: 上传 刷机固件 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+	name: download
+        path: download
