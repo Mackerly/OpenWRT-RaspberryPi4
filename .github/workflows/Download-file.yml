@@ -4,7 +4,7 @@ on: push
 
 
 jobs:
-  Download file:
+  Downloadfile:
 
     runs-on: ubuntu-18.04
     if: github.event.repository.owner.id == github.event.sender.id 
