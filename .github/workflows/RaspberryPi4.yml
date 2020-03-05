@@ -96,6 +96,7 @@ jobs:
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
+        git clone https://github.com/pauldeng/qt5-openwrt-package.git
         git clone  https://github.com/frainzy1477/luci-app-clash.git
         git clone  https://github.com/Dreamacro/clash       
 
@@ -156,9 +157,9 @@ jobs:
     - name: 整理编译结果
       run: |
         cd openwrt && mkdir imagebuilder
-        find bin/targets -name *imagebuilder* -exec cp {} ./imagebuilder \;
+        find bin/ -name *imagebuilder* -exec cp {} ./imagebuilder \;
         mkdir sdk
-        find bin/targets -name *sdk* -exec cp {} ./sdk \;
+        find bin/ -name *sdk* -exec cp {} ./sdk \;
         mkdir images
         find bin/targets -name *factory* -exec cp {} ./images \;
         find bin/targets -name *sysupgrade* -exec cp {} ./sysupgrade \;
