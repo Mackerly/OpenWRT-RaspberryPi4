@@ -74,7 +74,7 @@ jobs:
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/ddns-scripts_dnspod
 
         # 内网穿透相关
-        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/frpc
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/frp
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-frpc
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-nps
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/npc
