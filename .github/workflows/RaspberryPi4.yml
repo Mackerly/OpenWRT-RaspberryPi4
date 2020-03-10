@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-#on: push
+on: push
 
 env:
   SSH_ACTIONS: true
@@ -101,10 +101,9 @@ jobs:
         git clone  https://github.com/Dreamacro/clash       
 
         # luci主题
-        git clone https://github.com/jerrykuku/luci-theme-argon.git
-        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-argon-dark-mod
-        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-argon-light-mod
-        svn co https://github.com/Lienol/openwrt-package/trunk/lienol/luci-theme-netgear-mc
+        git clone https://github.com/jerrykuku/luci-theme-argon.git 
+        git clone https://github.com/yangsongli/luci-theme-atmaterial.git
+
       
     - name: 更新 upx 程序版本,版本太低，压缩的 v2ray 可能会出错
       run: |
