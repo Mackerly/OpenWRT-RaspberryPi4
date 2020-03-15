@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-on: push
+#on: push
 
 env:
   SSH_ACTIONS: true
@@ -93,10 +93,6 @@ jobs:
         git clone  https://github.com/TheMMcOfficial/lede-cups.git
         mkdir yaaw
         wget --no-check-certificate -O ./yaaw/Makefile https://raw.githubusercontent.com/openwrt/packages/lede-17.01/net/yaaw/Makefile
-        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/luci-app-qbittorrent
-        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/qBittorrent
-        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/rblibtorrent
-        git clone https://github.com/pauldeng/qt5-openwrt-package.git
         git clone  https://github.com/frainzy1477/luci-app-clash.git
         git clone  https://github.com/Dreamacro/clash       
 
@@ -112,6 +108,17 @@ jobs:
         sudo mv /usr/bin/upx /usr/bin/upx.old && sudo cp /tmp/upx-3.96-amd64_linux/upx /usr/bin/upx
         cd - && cp /tmp/upx-3.96-amd64_linux/upx ./openwrt/staging_dir/host/bin/upx
         rm -rf /tmp/upx-3.96-amd64_linux*
+    
+    - name: 整理空间
+      run: |
+        sudo mkdir /mnt/openwrt && sudo chown runner.docker /mnt/openwrt
+        mkdir /mnt/openwrt/dl /mnt/openwrt/bin /mnt/openwrt/build_dir
+        mv fees staging_dir /mnt/openwrt
+        ln -s /mnt/openwrt/dl ./dl
+        ln -s /mnt/openwrt/staging_dir ./staging_dir
+        ln -s /mnt/openwrt/feeds ./feeds
+        ln -s /mnt/openwrt/bin ./bin
+        ln -s /mnt/openwrt/build_dir ./build_dir
 
     - name: 生成默认的.config文件
       run: |
