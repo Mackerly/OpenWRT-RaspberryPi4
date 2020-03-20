@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-#on: push
+on: push
 
 env:
   SSH_ACTIONS: true
@@ -93,8 +93,8 @@ jobs:
         git clone  https://github.com/TheMMcOfficial/lede-cups.git
         mkdir yaaw
         wget --no-check-certificate -O ./yaaw/Makefile https://raw.githubusercontent.com/openwrt/packages/lede-17.01/net/yaaw/Makefile
-        git clone  https://github.com/frainzy1477/luci-app-clash.git
-        git clone  https://github.com/Dreamacro/clash       
+        # git clone  https://github.com/frainzy1477/luci-app-clash.git
+        # git clone  https://github.com/Dreamacro/clash       
 
         # luci主题
         git clone https://github.com/jerrykuku/luci-theme-argon.git 
@@ -113,7 +113,8 @@ jobs:
       run: |
         sudo mkdir /mnt/openwrt && sudo chown runner.docker /mnt/openwrt
         mkdir /mnt/openwrt/dl /mnt/openwrt/bin /mnt/openwrt/build_dir
-        mv fees staging_dir /mnt/openwrt
+        cd openwrt
+        mv feeds staging_dir /mnt/openwrt
         ln -s /mnt/openwrt/dl ./dl
         ln -s /mnt/openwrt/staging_dir ./staging_dir
         ln -s /mnt/openwrt/feeds ./feeds
@@ -175,7 +176,7 @@ jobs:
       if: steps.compile.outputs.status == 'success'
       with:
         name: OpenWrt
-        path: openwrt/bin
+        path: /mnt/openwrt/bin
     
     - name: 上传 dl 文件夹到 Actions 页面
       uses: actions/upload-artifact@master
