@@ -144,7 +144,8 @@ jobs:
        # make defconfig
         
     - name: SSH 链接到 Actions
-      uses: Mackerly/debugger-action@master
+      #uses: Mackerly/debugger-action@master
+      uses: csexton/debugger-action@master
       if: env.SSH_ACTIONS == 'true'
       
     - name: 下载需要用到的源码包到dl文件夹
