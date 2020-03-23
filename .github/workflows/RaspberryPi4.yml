@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-on: push
+#on: push
 
 env:
   SSH_ACTIONS: true
@@ -50,7 +50,11 @@ jobs:
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/srelay
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/adbyby
         svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/dnsforwarder
-        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/kcptun    
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/kcptun  
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/UnblockNeteaseMusicGo
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/redsocks2
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/tcpping
+        svn co https://github.com/coolsnowwolf/lede/trunk/package/lean/microsocks  
 
     - name: 添加luci-app-vlmcsd、vlmcsd
       run: |
