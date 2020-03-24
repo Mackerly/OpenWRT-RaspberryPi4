@@ -24,8 +24,8 @@ jobs:
         docker rmi $(docker image ls -aq)
         df -h
     
-    - name: cleanup old action artifacts
-      run: .github/workflows/purge_artifacts.sh ${{ secrets.REPO_ACCESS_TOKEN }}
+    #- name: cleanup old action artifacts
+    #  run: .github/workflows/purge_artifacts.sh ${{ secrets.REPO_ACCESS_TOKEN }}
       
     - name: 安装编译环境需要的依赖包.
       run: |
