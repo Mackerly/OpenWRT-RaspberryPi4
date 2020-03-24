@@ -1,6 +1,6 @@
 name: Build OpenWRT for RaspberryPi4
 
-#on: push
+on: push
 
 env:
   SSH_ACTIONS: false
@@ -137,6 +137,13 @@ jobs:
         ln -s /mnt/openwrt/feeds ./feeds
         ln -s /mnt/openwrt/bin ./bin
         ln -s /mnt/openwrt/build_dir ./build_dir
+        mkdir -p ./files/etc/hotplug.d/block
+        mkdir -p ./files/etc/uci-defaults/
+        wget -O ./files/etc/hotplug.d/block/20-smb https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/20-smb
+        wget -O ./files/etc/hotplug.d/block/11-mount https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/11-mount
+        wget -O ./files/etc/banner https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/banner
+        wget -O ./files/etc/uci-defaults/openwrtinit.sh https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/openwrtinit.sh
+        chmod +x ./files/etc/uci-defaults/openwrtinit.sh ./files/etc/hotplug.d/block/20-smb ./files/etc/hotplug.d/block/11-mount
 
     - name: 生成默认的.config文件
       run: |
