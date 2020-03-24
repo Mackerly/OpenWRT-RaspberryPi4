@@ -12,12 +12,12 @@ uci set luci.main.lang=zh_cn
 
 uci commit
 
-mkdir -p ./files/etc/hotplug.d/block
+# mkdir -p ./files/etc/hotplug.d/block
 # samba autoshare
-wget -O ./files/etc/hotplug.d/block/20-smb https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/20-smb
+# wget -O ./files/etc/hotplug.d/block/20-smb https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/20-smb
 
 # blockdevice automount
-wget -O ./files/etc/hotplug.d/block/11-mount https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/11-mount
+# wget -O ./files/etc/hotplug.d/block/11-mount https://github.com/Mackerly/OpenWRT-RaspberryPi4/raw/master/11-mount
 
 # add some alias to profile
 cat >> /etc/profile <<EOF
