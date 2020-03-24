@@ -1,0 +1,45 @@
+#!/bin/sh
+# Copyright (C) 2009 OpenWrt.org  (C) 2010 OpenWrt.org.cn
+/sbin/block hotplug
+
+logger -t HOTPLUG "PRODUCT ID is " $SUBSYSTEM $ACTION
+
+if [ $ACTION == "add" -a $SUBSYSTEM == "block" -a $DEVTYPE == "partition" ];then
+	# vfat & ntfs-3g check
+	if  [ `which fdisk` ]; then
+		isntfs=`fdisk -l | grep $DEVNAME | grep NTFS`
+		isvfat=`fdisk -l | grep $DEVNAME | grep FAT`
+		isfuse=`lsmod | grep fuse`
+		isntfs3g=`which ntfs-3g`
+	else
+		isntfs=""
+		isvfat=""
+	fi
+
+	[ -d /mnt/$DEVNAME ] || mkdir -p /mnt/$DEVNAME
+
+	# mount with ntfs-3g if possible, else with default mount
+	if [ "$isntfs" -a "$isfuse" -a "$isntfs3g" ]; then
+		ntfs-3g -o nls=utf8 /dev/$DEVNAME /mnt/$DEVNAME
+		#uci add samba sambashare
+		#uci set samba.@sambashare[-1].browseable='yes'
+		#uci set samba.@sambashare[-1].name='Share'$DEVNAME
+		#uci set samba.@sambashare[-1].path='/mnt/'$DEVNAME
+		#uci set samba.@sambashare[-1].read_only='no'
+		#uci set samba.@sambashare[-1].guest_ok='yes'
+		#uci commit
+		#/etc/init.d/samba reload
+	elif [ "$isvfat" ]; then
+		mount -t vfat -o iocharset=utf8,rw,sync,umask=0000,dmask=0000,fmask=0000 /dev/$DEVNAME /mnt/$DEVNAME
+	else
+		mount /dev/$DEVNAME /mnt/$DEVNAME
+	fi
+fi
+
+if [ $ACTION == "remove" -a $SUBSYSTEM == "block" -a $DEVTYPE == "partition" ];then
+	umount /dev/$DEVNAME
+	[ -d /mnt/$DEVNAME ] && rm -rf /mnt/$DEVNAME
+	#uci delete samba.@sambashare[`uci show samba | grep $DEVNAME |awk -F'[' '{print $2}' |awk -F']' '{print $1}'`]
+	#uci commit
+fi
+
