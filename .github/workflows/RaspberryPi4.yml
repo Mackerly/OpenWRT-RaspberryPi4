@@ -1,9 +1,9 @@
 name: Build OpenWRT for RaspberryPi4
 
-on: push
+#on: push
 
 env:
-  SSH_ACTIONS: true
+  SSH_ACTIONS: false
   TZ: Asia/Shanghai
   upxVersion: 3.96
   
