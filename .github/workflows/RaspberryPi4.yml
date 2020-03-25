@@ -183,7 +183,7 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: .config
-        path: openwrt/dl
+        path: /mnt/openwrt/dl
 
         
         
