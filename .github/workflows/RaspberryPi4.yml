@@ -178,12 +178,59 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
         
+    - name: 开始编译Openwrt
+      id: compile
+      run: |
+        cd openwrt
+        echo -e "$(nproc) thread compile"    
+        make -j$(nproc) || make -j1 V=s
+        echo "::set-output name=status::success"
+        
+    - name: 整理编译结果
+      run: |
+        cd openwrt 
+        mkdir imagebuilder
+        find bin/ -name *imagebuilder* -exec cp {} ./imagebuilder \;
+        
+        mkdir sdk
+        find bin/ -name *sdk* -exec cp {} ./sdk \;
+        
+        mkdir images
+        find bin/targets -name *factory* -exec cp {} ./images \;
+        find bin/targets -name *sysupgrade* -exec cp {} ./sysupgrade \;
+        
+    - name: 上传编译的结果到 Actions 页面
+      uses: actions/upload-artifact@master
+      if: steps.compile.outputs.status == 'success'
+      with:
+        name: OpenWrt
+        path: /mnt/openwrt/bin
+    
 
-    - name: 上传dl文件到Acions页面
+    - name: 上传 imagebuilder 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+        name: imagebuilder
+        path: openwrt/imagebuilder
+
+    - name: 上传 sdk 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+        name: sdk
+        path: openwrt/sdk
+
+    - name: 上传 刷机固件 到 Actions 页面
+      uses: actions/upload-artifact@master
+      with:
+        name: images
+        path: openwrt/images
+
+    - name: 上传.config文件到Acions页面
       uses: actions/upload-artifact@master
       with:
         name: .config
-        path: /mnt/openwrt/dl
+        path: openwrt/.config
+
 
         
         
